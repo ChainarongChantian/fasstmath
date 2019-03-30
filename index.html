@@ -69,17 +69,13 @@
                     document.getElementById("countdown").innerHTML = "หมดเวลา"
                     document.getElementById("countdown").innerHTML = "99 วิ"
                     document.getElementById('start-game').style.visibility = "visible";
-                    callGo();
                     valuate = "?falseAns=" + falseAnswer + "&acceptPics=" + acceptPics + "&points=" + points;
                     console.log(`falseAnswer ${falseAnswer}, acceptPics ${acceptPics}, points ${points}`)
                     window.location.href = "gameover.html" + valuate;
                     
                 }
             }, 500);
-        }
-        function callGo() {
-            (document.getElementById('gameover')).play();
-        }   
+        }  
 
         function isNumberKey(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode
