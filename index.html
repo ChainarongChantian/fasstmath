@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    <script>
+        var falseAnswer = 0;
+        var acceptPics = 0;
+        var points = 0;
+        var total = 0;
+
+        function initNewPics() {
+            var pics = ['carrot', 'duck', 'cabbage', 'cow'];
+            randPic = pics[Math.floor(Math.random() * pics.length)];
+            packPic = -1;
+            var lastPartRandPic;
+            unprintTextReading();
+            if (randPic === 'cabbage') {
+                $('#init-pic').attr('src', './pics/cabbage/4cabbage.png');
+                packPic = 4;
+            }
+            else if (randPic === 'carrot') {
+                $('#init-pic').attr('src', './pics/carrot/4carrot.png');
+                packPic = 4;
+            }
+            else if (randPic === 'cow') {
+                $('#init-pic').attr('src', './pics/cow/6cow.png');
+                packPic = 6;
+
+            }
+            else {
+                $('#init-pic').attr('src', './pics/duck/5duck.png');
+                packPic = 5;
+
+            }
+        }
+
+        function gameStop() {
+            document.getElementById('start-game').style.visibility = 'visible';
+            document.getElementById('answer').disabled = true;
+            $('#answer').val('');
+            document.getElementById('press-enter').style.visibility = "hidden";
+            $('#head').text('??');
+            $('#tail').text('??');
+            $('#init-pic').attr('src', './pics/blank.png');
+            timeleft = 0;
+        }
+        function gameStart() {
+            (document.getElementById('time')).play();
+            document.getElementById('answer').disabled = false;
+            document.getElementById('start-game').style.visibility = 'hidden';
+            initNewPics();
+            randowNewQuestion();
+            timeleft = 99;
+            var downloadTimer = setInterval(function () {
+                document.getElementById("countdown").style.font = "italic bold 80px cursive, sans-serif";
+
+                document.getElementById("countdown").innerHTML = timeleft;
+                timeleft -= 1;
+                if (timeleft < 0) {
+                    clearInterval(downloadTimer);
+                    document.getElementById("countdown").style.font = "italic bold 40px cursive, sans-serif";
+                    document.getElementById("countdown").innerHTML = "หมดเวลา"
+                    document.getElementById("countdown").innerHTML = "99 วิ"
+                    document.getElementById('start-game').style.visibility = "visible";
+                    callGo();
+                    valuate = "?falseAns=" + falseAnswer + "&acceptPics=" + acceptPics + "&points=" + points;
+                    console.log(`falseAnswer ${falseAnswer}, acceptPics ${acceptPics}, points ${points}`)
+                    window.location.href = "gameover.html" + valuate;
+                    
+                }
+            }, 500);
+        }
+        function callGo() {
+            (document.getElementById('gameover')).play();
+        }   
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                evt.preventDefault();
+        }
+
+        function randowNewQuestion() {
+            $('#head').text(Math.floor((Math.random() * 99) + 1));
+            $('#tail').text(Math.floor((Math.random() * 99) + 1));
+        }
+
+        function showPressingGif(val, evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (val.length > 0) {
+                if (val.length === 3) {
+                    document.getElementById('press-enter').style.visibility = "visible";
+                } else {
+                    document.getElementById('press-enter').style.visibility = "hidden";
+                }
+            } else {
+                document.getElementById('press-enter').style.visibility = "hidden";
+            }
+        }
+
+        function printTextReading() {
+            if (randPic === 'cabbage') {
+                $('#text-reading').text('cabbage = กะหล่ำปลี')
+            }
+            else if (randPic === 'carrot') {
+                $('#text-reading').text('carrot = แครอท')
+            }
+            else if (randPic === 'cow') {
+                $('#text-reading').text('cow = วัว')
+            } else {
+                $('#text-reading').text('duck = เป็ด')
+            }
+            document.getElementById('text-reading').style.visibility = "visible";
+        }
+
+        function unprintTextReading() {
+            document.getElementById('text-reading').style.visibility = "hidden";
+        }
+
+        function callingThem() {
+            initNewPics();
+            randowNewQuestion();
+        }
+
+        $(document).ready(function () {
+            $("#answer").on('keypress', function (e) {
+                var grabHead = parseInt($('#head').text().trim());
+                var grabTail = parseInt($('#tail').text().trim());
+                var answer = $('#answer').val();
+                if (e.which === 13 && answer.length > 0) {
+                    if (grabHead + grabTail === parseInt(answer)) {
+                        points += 50;
+                        if (randPic === 'cabbage') {
+                            $('#init-pic').attr('src', `./pics/cabbage/${--packPic}cabbage.png`);
+                        }
+                        else if (randPic === 'carrot') {
+                            $('#init-pic').attr('src', `./pics/carrot/${--packPic}carrot.png`);
+                        }
+                        else if (randPic === 'cow') {
+                            $('#init-pic').attr('src', `./pics/cow/${--packPic}cow.png`);
+                        } else {
+                            $('#init-pic').attr('src', `./pics/duck/${--packPic}duck.png`);
+                        }
+                        $('#answer').val('');
+                        if (packPic === 0) {
+                            (document.getElementById('correct')).play();
+                            ++acceptPics;
+                            points += 200;
+                            $('#head').text('??');
+                            $('#tail').text('??');
+                            setTimeout('callingThem()', 2000);
+                            printTextReading();
+                        }
+                        else {
+                            (document.getElementById('pour')).play();
+                            randowNewQuestion();
+                        }
+                    }
+                    else {
+                        (document.getElementById('wrong')).play();
+                        $('#answer').val('');
+                        ++falseAnswer;
+                        randowNewQuestion();
+                    }
+                    //console.log(`falseAnswer ${falseAnswer}, acceptPics ${acceptPics}, points ${points}`)
+                }
+            })
+        })
+    </script>
+</head>
+
+<body class="scene">
+    <div>
+        <div id="stop-game">
+            <a href="howplayfastmath.html" onmouseover="" style="cursor: pointer;">วิธีเล่น</a>
+        </div>
+        <div id="start-game">
+            <a onmouseover="" style="cursor: pointer;" onclick="gameStart()">เริ่มเกม</a>
+        </div>
+    </div>
+    <div>
+        <div class="container">
+            <img src="./pics/headers/pig-header.png" alt="cow counter border" width="250" height="210">
+            <div class="div pre-count centered" id="countdown">99 วิ</div>
+        </div>
+        <label id="head">??</label>
+        <label>+</label>
+        <label id="tail">??</label>
+        <label>=</label>
+        <input id="answer" disabled type="text" maxlength="3" onkeypress="isNumberKey(event)"
+            onkeyup="showPressingGif(this.value, event)">
+        <img id="press-enter" style="visibility: hidden" src="./pics/pressing-enter.gif" alt="pressing-enter"
+            width="100" height="100">
+    </div>
+    <div>
+        <label id="text-reading" style="visibility: hidden">??</label>
+        <div>
+            <img id="init-pic" src="./pics/blank.png" alt="c" width="300" height="300">
+        </div>
+    </div>
+    <div><a>กลับไปหน้าหลัก</a></div>
+    <audio id="pour" src="./sounds/pour.mp3" hidden="true"> </audio>
+    <audio id="correct" src="./sounds/accept.mp3" hidden="true"> </audio>
+    <audio id="wrong" src="./sounds/wrong.mp3" hidden="true"> </audio>
+    <audio id="time" src="./sounds/time.mp3" hidden="true"> </audio>
+</body>
+
+</html>

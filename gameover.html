@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    <title>Game Over</title>
+    <script>
+        var valuate = decodeURIComponent(window.location.search);
+        valuate = valuate.substring(1);
+        var val = valuate.split("&");
+
+        var f = val[0].split('=').pop();
+        var a = val[1].split('=').pop();
+        var p = val[2].split('=').pop();
+        $(document).ready(function () {
+            $('#qfalse').text(`จำนวนครั้งที่ตอบผิด : ${f} `);
+            $('#accept').text(`ระบายรูปภาพสำเร็จ : ${a} `);
+            $('#points').text(`คะแนนรวมที่ได้: ${p} `);
+        })
+    </script>
+</head>
+
+<body class="behide-scene">
+    <div>
+        <a href="index.html">เล่นใหม่</a>
+    </div>
+    <div>
+        <img src="./pics/game-over.png" alt="game over">
+    </div>
+    <div>
+        <label id="qfalse">??</label><br>
+        <label id="accept">??</label><br>
+        <label id="points">??</label>
+    </div>
+    <div>
+        <img src="./pics/piglet/in-time.png" alt="game over" width="900">
+    </div>
+    <div>
+        <a>กลับไปหน้าหลัก</a>
+    </div>
+</body>
+</html>
